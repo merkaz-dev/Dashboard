@@ -1,0 +1,13 @@
+<mat-accordion [multi]="multi" #accordion="matAccordion">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title style="text-align: center;">
+        <div>
+          {{ dataInfo.title }}
+          {{ dataInfo.titleTimeRange }}
+        </div>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-range-datepicker></app-range-datepicker>
+  </mat-expansion-panel>
+</mat-accordion>

@@ -1,0 +1,44 @@
+<div class="row no-gutters">
+  <!-- DATEPICKER FROM -->
+  <div class="col-xl-4 col-lg-4 col-md-4 col-12 d-flex">
+    <mat-form-field class="mx-auto">
+      <!-- <mat-label>Angular forms</mat-label> -->
+      <input
+        matInput
+        [matDatepicker]="pickerFromDate"
+        [formControl]="fromDate"
+        placeholder="Начало периода"
+      />
+      <mat-datepicker-toggle matSuffix [for]="pickerFromDate">
+        <mat-icon matDatepickerToggleIcon>keyboard_arrow_down </mat-icon>
+      </mat-datepicker-toggle>
+      <mat-datepicker touchUi #pickerFromDate></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <!-- DATEPICKER TO -->
+  <div class="col-xl-4 col-lg-4 col-md-4 col-12 d-flex">
+    <mat-form-field class="mx-auto">
+      <!-- <mat-label>Angular forms</mat-label> -->
+      <input
+        matInput
+        [matDatepicker]="pickerToDate"
+        [formControl]="toDate"
+        placeholder="Конец периода"
+      />
+      <mat-datepicker-toggle matSuffix [for]="pickerToDate">
+        <mat-icon matDatepickerToggleIcon>keyboard_arrow_down </mat-icon>
+      </mat-datepicker-toggle>
+      <mat-datepicker touchUi #pickerToDate></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <!-- SUBMIT BUTTOM -->
+  <div class="col-xl-4 col-lg-4 col-md-4 col-12 d-flex">
+    <div class="mx-auto pt-2">
+      <button mat-raised-button color="accent" (click)="readDates()">
+        Accent
+      </button>
+    </div>
+  </div>
+</div>

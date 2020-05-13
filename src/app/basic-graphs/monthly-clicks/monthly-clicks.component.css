@@ -1,0 +1,7 @@
+.d3-tip {
+  text-align: center;
+  background-color: rgba(216, 112, 193, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+}

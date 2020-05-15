@@ -8,6 +8,7 @@ function runSpinner(chartContainer, svgHeight) {
   const svg = d3
     .select(element)
     .append("svg")
+    .attr("id", "weekChartSpinner")
     .attr("width", width)
     .attr("height", height);
 

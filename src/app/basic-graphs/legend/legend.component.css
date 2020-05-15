@@ -1,0 +1,10 @@
+/* Structure */
+.table-sm th,
+.table-sm td {
+  padding: 0.2rem;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}

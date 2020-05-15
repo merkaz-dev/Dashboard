@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:se="http://svg-edit.googlecode.com" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="199" height="58"  viewBox="0 0 199 58" preserveAspectRatio="xMinYMid">
+                                     
+                                    <!-- line-color: stroke
+									circle-color: fill
+									circle-stroke: stroke
+									-->
+                                    <rect width="100%" height="100%" x="0" y="0" fill="#FFFFFF" stroke="none" class="iconBackground"/>
+                                <g style="" class="currentLayer"> 
+								<!-- LINE -->
+								<path fill="green" fill-opacity="1" stroke="#222222" stroke-opacity="1" stroke-width="30" stroke-dasharray="none" stroke-linejoin="round" stroke-linecap="butt" stroke-dashoffset="" fill-rule="nonzero" opacity="1" marker-start="" marker-mid="" marker-end="" d="M8.500000175852822,29.1449266691924 L190.13084379177604,26.665587904381866 " class="iconLine" transform="rotate(-179.2554168701172 99.31542205810547,27.905256271362305) "/>
+								
+								<!-- CIRCLE -->
+								<path fill="red" fill-opacity="1" stroke="green" stroke-opacity="1" stroke-width="9" stroke-dasharray="none" stroke-linejoin="round" stroke-linecap="butt" stroke-dashoffset="" fill-rule="nonzero" opacity="1" marker-start="" marker-mid="" marker-end="" d="M73.91147756370668,27.698344911927855 C73.91147756370668,14.785693538042231 85.45067590913021,4.32644592519487 99.69659979236916,4.32644592519487 C113.94252367560807,4.32644592519487 125.48172202103163,14.785693538042231 125.48172202103163,27.698344911927855 C125.48172202103163,40.61099628581347 113.94252367560807,51.070243898660834 99.69659979236916,51.070243898660834 C85.45067590913021,51.070243898660834 73.91147756370668,40.61099628581347 73.91147756370668,27.698344911927855 z" class="iconCircle"/></g></svg>
+								
+								
+								
+								

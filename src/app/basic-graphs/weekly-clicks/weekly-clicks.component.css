@@ -2,6 +2,9 @@
   height: auto;
   width: 100%;
 }
+.iconCircle img {
+  stroke: red;
+}
 .d3-tip {
   text-align: center;
   background-color: rgba(216, 112, 193, 0.8);

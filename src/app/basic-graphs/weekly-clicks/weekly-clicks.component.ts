@@ -17,7 +17,7 @@ import { runSpinner, responsivefy } from '../../../assets/util/util_svg_graphs';
 import { getDataReady } from '../../../assets/scripts/basic-graphs';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/adapters/unsubscribe-on-destroy-adapter';
 import { LoaderService } from 'src/app/services/loader.service';
-import { LoaderState } from 'src/app/models/loader-state';
+import { LoaderState } from 'src/models/loader-state';
 
 @Component({
   selector: 'app-weekly-clicks',
@@ -27,7 +27,7 @@ import { LoaderState } from 'src/app/models/loader-state';
 })
 export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
   implements OnChanges, OnDestroy {
-  @ViewChild('chart') chartContainer: ElementRef;
+  @ViewChild('weekChart') chartContainer: ElementRef;
   @Input() data: any;
   chartHeight = 450;
   dataInfo: any;
@@ -48,7 +48,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
         this.isLoading = state.show;
         console.log('IS LOADING', this.isLoading);
         if (this.isLoading) {
-          d3.select('svg').remove();
+          d3.select('#weekChartSvg').remove();
           runSpinner(this.chartContainer, this.chartHeight);
         }
       })
@@ -56,8 +56,6 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
   }
   ngAfterViewInit() {
     // Spinner runs on the first load. Then control is done by LoaderService.
-    console.log('isLoading', this.isLoading);
-    runSpinner(this.chartContainer, this.chartHeight);
   }
   ngOnChanges(): void {
     if (!this.data) {
@@ -69,7 +67,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
 
   //----------- CREATE CHART -------------
   private createChart(): void {
-    d3.select('svg').remove();
+    d3.select('#weekChartSpinner').remove();
     const element = this.chartContainer.nativeElement;
 
     // ----------- GET DATA -------------
@@ -80,6 +78,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
     const svg = d3
       .select(element)
       .append('svg')
+      .attr('id', 'weekChartSvg')
       .attr('width', element.offsetWidth)
       .attr('height', this.chartHeight)
       .call(responsivefy);

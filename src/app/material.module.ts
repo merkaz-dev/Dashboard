@@ -18,12 +18,14 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
-
+import { MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 const modules = [
   MatMenuModule,
   MatIconModule,
   MatCardModule,
   MatListModule,
+  MatTableModule,
   MatInputModule,
   MatSliderModule,
   MatDialogModule,
@@ -31,11 +33,11 @@ const modules = [
   MatButtonModule,
   MatDividerModule,
   MatToolbarModule,
+  MatCheckboxModule,
   MatGridListModule,
   MatExpansionModule,
   MatFormFieldModule,
   MatDatepickerModule,
-  MatNativeDateModule,
   MatProgressBarModule,
   MatBottomSheetModule,
   MatProgressSpinnerModule,

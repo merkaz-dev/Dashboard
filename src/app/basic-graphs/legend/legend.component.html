@@ -7,12 +7,15 @@
           <mat-checkbox
             class="example-margin"
             [disabled]="disabled"
-            [checked]="checked"
+            [checked]="totalLinechecked"
+            (change)="totalLineChange((totalLinechecked = !totalLinechecked))"
           >
           </mat-checkbox>
         </td>
 
-        <td valign="middle" align="center"><div class="cached"></div></td>
+        <td valign="middle" align="center">
+          <div [id]="totalLineHtmlId"></div>
+        </td>
         <td valign="middle" align="center">
           <mat-checkbox
             class="example-margin"
@@ -38,7 +41,9 @@
           </mat-checkbox>
         </td>
 
-        <td valign="middle" align="center"><div class="cached"></div></td>
+        <td valign="middle" align="center">
+          <div [id]="uniqueLineHtmlId"></div>
+        </td>
         <td valign="middle" align="center">
           <mat-checkbox
             class="example-margin"

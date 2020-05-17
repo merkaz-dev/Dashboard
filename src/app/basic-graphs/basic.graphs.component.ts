@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 import { BasicGraphsHttpService } from './basic-graphs-http.service';
 
-import { log } from 'util';
 @Component({
   selector: 'app-basic-graphs',
   templateUrl: './basic-graphs.component.html',

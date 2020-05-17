@@ -18,6 +18,7 @@ import { getDataReady } from '../../../assets/scripts/basic-graphs';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/adapters/unsubscribe-on-destroy-adapter';
 import { LoaderService } from 'src/app/services/loader.service';
 import { LoaderState } from 'src/models/loader-state';
+import { getBasicChartsConfig } from '../../../assets/util/basic-charts-config.js';
 
 @Component({
   selector: 'app-weekly-clicks',
@@ -32,6 +33,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
   chartHeight = 450;
   dataInfo: any;
   isLoading = false;
+  wc = getBasicChartsConfig().weeklyChart;
 
   constructor(
     private basicGraphs: BasicGraphsHttpService,
@@ -54,9 +56,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       })
     );
   }
-  ngAfterViewInit() {
-    // Spinner runs on the first load. Then control is done by LoaderService.
-  }
+
   ngOnChanges(): void {
     if (!this.data) {
       return;
@@ -97,14 +97,13 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
     const tip = getWeekTip(contentWidth, contentHeight);
     svg.call(tip);
 
-    var color = d3
+    var areaColors = d3
       .scaleOrdinal()
       .domain(['uniqueClicks', 'totalClicks'])
-      .range(['rgba(249, 208, 87, 0.7)', 'rgba(54, 174, 175, 0.65)']);
+      .range([this.wc.styles.totalAreaFill, this.wc.styles.uniqueAreaFill]);
 
     var x = d3.scaleTime().range([0, contentWidth]),
-      y = d3.scaleLinear().range([contentHeight, 0]),
-      z = color;
+      y = d3.scaleLinear().range([contentHeight, 0]);
 
     var area = d3
       .area()
@@ -136,7 +135,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       }),
     ]);
 
-    z.domain(
+    areaColors.domain(
       data.dataTotalClicks.map(function (c) {
         return c.key;
       })
@@ -170,12 +169,12 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       .text('Клики');
 
     var areaSource = g
-      .selectAll('.area')
+      .selectAll('.areas')
       .data(data.dataAllClicks)
       .enter()
       .append('g')
-      .attr('class', function (d) {
-        return `area ${d.key}`;
+      .attr('id', function (d) {
+        return `area-${d.key}-week`;
       });
 
     areaSource
@@ -184,11 +183,14 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
         return area(d.value);
       })
       .style('fill', function (d) {
-        return z(d.key);
+        return areaColors(d.key);
       });
 
     //LINE
-    const lineColor = d3.scaleOrdinal(d3.schemeCategory10);
+    const lineColors = d3
+      .scaleOrdinal()
+      .domain(['uniqueLine', 'totalLine'])
+      .range([this.wc.styles.totalLineStroke, this.wc.styles.uniqueLineStroke]);
 
     var line = d3
       .line()
@@ -201,12 +203,15 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       .curve(d3.curveMonotoneX);
 
     var lineSource = g
-      .selectAll('.line')
+      .selectAll('.lines')
       .data(data.dataAllClicks)
       .enter()
       .append('g')
+      .attr('id', function (d) {
+        return `line-${d.key}-week`;
+      })
       .attr('class', function (d) {
-        return `line ${d.key}`;
+        return `line-${d.key}-week`;
       });
 
     lineSource
@@ -215,8 +220,8 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
         return line(d.value);
       })
       .attr('fill', 'none')
-      .attr('stroke-width', '0.1em')
-      .attr('stroke', (d) => lineColor(d.key));
+      .attr('stroke-width', this.wc.styles.linesStrokWidth)
+      .attr('stroke', (d) => lineColors(d.key));
 
     // TOTAL-CLICKS CIRCLES
     var totalClicksCircles = g
@@ -224,7 +229,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       .data(data.dataAllClicks[0].value)
       .enter()
       .append('g')
-      .attr('class', 'circles total');
+      .attr('class', this.wc.htmlAttrs.circlesTotalClass);
 
     totalClicksCircles
       .append('circle')
@@ -234,19 +239,20 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       .attr('cy', function (d) {
         return y(d.clicks);
       })
-      .attr('r', 4)
-      .attr('fill', 'red')
-      .attr('stroke', 'none')
+      .attr('r', this.wc.totalCircleR)
+      .attr('fill', this.wc.styles.totalCircleFill)
+      .attr('stroke', this.wc.styles.totalCircleStroke)
+      .attr('stroke-width', this.wc.styles.totalCircleStrokeWidth)
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide);
 
     // UNIQUE-CLICKS CIRCLES
     var uniqueClicksCircles = g
-      .selectAll('total')
+      .selectAll('unique')
       .data(data.dataAllClicks[1].value)
       .enter()
       .append('g')
-      .attr('class', 'circles total');
+      .attr('class', this.wc.uniqueCirclesClassN);
 
     uniqueClicksCircles
       .append('circle')
@@ -256,9 +262,10 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       .attr('cy', function (d) {
         return y(d.clicks);
       })
-      .attr('r', 4)
-      .attr('fill', 'blue')
-      .attr('stroke', 'none')
+      .attr('r', this.wc.uniqueCircleR)
+      .attr('fill', this.wc.styles.uniqueCircleFill)
+      .attr('stroke', this.wc.styles.uniqueCircleStroke)
+      .attr('stroke-width', this.wc.styles.uniqueCircleStrokeWidth)
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide);
   }

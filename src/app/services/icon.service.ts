@@ -18,7 +18,6 @@ export class IconService {
 
   private loadIcons(iconKeys: string[], iconUrl: string): void {
     iconKeys.forEach((key) => {
-      console.log(`${iconUrl}/${key}.svg`);
       this.matIconRegistry.addSvgIcon(
         key,
         this.domSanitizer.bypassSecurityTrustResourceUrl(

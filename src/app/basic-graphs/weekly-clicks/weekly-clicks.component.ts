@@ -52,13 +52,15 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
         this.data = d;
         console.log('DATA from S', this.data);
         this.readyData = getDataReady(this.data.data);
-        console.log('READY DATA from S', this.readyData);
+        this.dataInfo = this.data.info;
+        this.basicGraphs.processDataInfo(this.data.info);
         this.weeklyChart = getWeeklyChart(['totalClicks', 'uniqueClicks']);
-        console.log('Weekly Chart', this.weeklyChart);
-        this.createChart();
+
+        this.createChart(this.readyData, this.weeklyChart);
       }),
       this.basicGraphs.dataInfoSubj.subscribe((d) => {
         this.dataInfo = d;
+        console.log('D I', this.dataInfo);
       }),
       this.loaderService.loaderState.subscribe((state: LoaderState) => {
         this.isLoading = state.show;
@@ -84,12 +86,13 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
   }
 
   //----------- CREATE CHART -------------
-  private createChart(): void {
+  private createChart(myReadyData, myWeeklyChart): void {
     const element = this.chartContainer.nativeElement;
 
     // ----------- GET DATA -------------
-    const readyData = getDataReady(this.data.data);
-    const weeklyChart = getWeeklyChart(['totalClicks', 'uniqueClicks']);
+    const readyData = myReadyData;
+    const weeklyChart = myWeeklyChart;
+
     d3.select(`#${weeklyChart.spinnerId}`).remove();
 
     // ---------- SVG -----------

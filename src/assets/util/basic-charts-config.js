@@ -1,46 +1,5 @@
 import * as d3 from "d3";
 
-function getBasicChartsConfig() {
-  return {
-    weeklyChart: {
-      title: "Посещения по Неделям",
-      uniqueCircleR: 5,
-      totalCircleR: 5,
-      uniqueCirclesClassN: "circles-unique-week",
-      totalCirclesClassN: "circles-totals-week",
-
-      styles: {
-        areas: ["rgba(249, 208, 87, 0.7)", " rgba(54, 174, 175, 0.65)"],
-        linesStrokWidth: "0.2em",
-        uniqueAreaFill: "rgba(249, 208, 87, 0.7)",
-        totalAreaFill: "rgba(54, 174, 175, 0.65)",
-        uniqueLineStroke: "green",
-        totalLineStroke: "red",
-        uniqueCircleFill: "yellow",
-        uniqueCircleStroke: "gray",
-        uniqueCircleStrokeWidth: 3,
-        totalCircleFill: "maroon",
-        totalCircleStroke: "steelblue",
-        totalCircleStrokeWidth: 3,
-      },
-      htmlAttrs: {
-        areaUniqueId: "area-unique-week",
-        areatotalId: "area-total-week",
-        lineUniqueId: "line-unique-week-chart",
-        lineTotalId: "line-total-week-chart",
-        circlesTotalClass: "circles-total-week",
-        circlesUniqueClass: "circles-unique-week",
-      },
-      legend: {
-        totalLineHtmlId: "total-line-week-chart-legend",
-        totalClassN: "total-line-legend",
-        uniqueClassN: "unique-line-legend",
-        uniqueLineHtmlId: "unique-line-week-chart-legend",
-      },
-    },
-  };
-}
-
 function getLineLegend(
   lineHtmlId,
   classN,
@@ -81,4 +40,24 @@ function getLineLegend(
   return svg;
 }
 
-export { getBasicChartsConfig, getLineLegend };
+function getRectLegend(rectHtmlId, rectFill) {
+  const svg = d3
+    .select(`#${rectHtmlId}`)
+    .append("svg")
+    .attr("height", 25)
+    .attr("width", 25);
+
+  var g = svg.append("g").attr("transform", "translate(0,0)");
+
+  var rect = g
+    .append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", 17)
+    .attr("height", 17)
+    .style("fill", rectFill);
+
+  return svg;
+}
+
+export { getLineLegend, getRectLegend };

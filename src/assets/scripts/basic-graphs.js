@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import localeRu from "../util/locale.json";
-import { getDateRangeOfWeek } from "../util/util_week_ranges";
+import { getDateRangeOfWeek } from "../util/util_weekly_chart_ranges";
 
 function getDataReady(data) {
   // PREPARING FORMATES

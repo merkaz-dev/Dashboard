@@ -11,14 +11,16 @@ import {
 import { BasicGraphsHttpService } from '../basic-graphs-http.service';
 
 import * as d3 from 'd3';
-import { getWeekTip } from '../../../assets/util/weekly_clicks_tip';
+import { getWeekTip } from '../../../assets/util/weekly_chart_tip';
 
 import { runSpinner, responsivefy } from '../../../assets/util/util_svg_graphs';
 import { getDataReady } from '../../../assets/scripts/basic-graphs';
 import { UnsubscribeOnDestroyAdapter } from 'src/app/adapters/unsubscribe-on-destroy-adapter';
 import { LoaderService } from 'src/app/services/loader.service';
-import { LoaderState } from 'src/models/loader-state';
-import { getBasicChartsConfig } from '../../../assets/util/basic-charts-config.js';
+import { LoaderState } from 'src/models/loader-state.model';
+
+import { getWeeklyChart } from 'src/charts-settings/weekly-chart';
+import { BasicTimeFrameChart } from 'src/models/basic-time-frame-charts/basic-time-frame-chart.model';
 
 @Component({
   selector: 'app-weekly-clicks',
@@ -29,11 +31,13 @@ import { getBasicChartsConfig } from '../../../assets/util/basic-charts-config.j
 export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
   implements OnChanges, OnDestroy {
   @ViewChild('weekChart') chartContainer: ElementRef;
-  @Input() data: any;
-  chartHeight = 450;
+  @Input('data') data: any;
+
   dataInfo: any;
+  keys: string[];
+  readyData: any;
   isLoading = false;
-  wc = getBasicChartsConfig().weeklyChart;
+  weeklyChart: BasicTimeFrameChart;
 
   constructor(
     private basicGraphs: BasicGraphsHttpService,
@@ -42,7 +46,17 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
     super();
   }
   ngOnInit() {
+    console.log('DATA', this.data);
     this.subs.add(
+      this.basicGraphs.getWeeklyClicks().subscribe((d) => {
+        this.data = d;
+        console.log('DATA from S', this.data);
+        this.readyData = getDataReady(this.data.data);
+        console.log('READY DATA from S', this.readyData);
+        this.weeklyChart = getWeeklyChart(['totalClicks', 'uniqueClicks']);
+        console.log('Weekly Chart', this.weeklyChart);
+        this.createChart();
+      }),
       this.basicGraphs.dataInfoSubj.subscribe((d) => {
         this.dataInfo = d;
       }),
@@ -50,48 +64,56 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
         this.isLoading = state.show;
         console.log('IS LOADING', this.isLoading);
         if (this.isLoading) {
-          d3.select('#weekChartSvg').remove();
-          runSpinner(this.chartContainer, this.chartHeight);
+          d3.select(`#${this.weeklyChart.svgId}`).remove();
+          runSpinner(
+            this.chartContainer,
+            this.weeklyChart.height,
+            this.weeklyChart.spinnerId
+          );
         }
       })
     );
   }
 
   ngOnChanges(): void {
-    if (!this.data) {
+    if (!this.readyData) {
       return;
     }
     // create chart
-    this.createChart();
+    //this.createChart();
   }
 
   //----------- CREATE CHART -------------
   private createChart(): void {
-    d3.select('#weekChartSpinner').remove();
     const element = this.chartContainer.nativeElement;
 
     // ----------- GET DATA -------------
-    const data = getDataReady(this.data.data);
-    console.log('ready data', data);
+    const readyData = getDataReady(this.data.data);
+    const weeklyChart = getWeeklyChart(['totalClicks', 'uniqueClicks']);
+    d3.select(`#${weeklyChart.spinnerId}`).remove();
 
     // ---------- SVG -----------
     const svg = d3
       .select(element)
       .append('svg')
-      .attr('id', 'weekChartSvg')
+      .attr('id', `${weeklyChart.svgId}`)
       .attr('width', element.offsetWidth)
-      .attr('height', this.chartHeight)
+      .attr('height', weeklyChart.height)
       .call(responsivefy);
 
     const contentWidth =
-      element.offsetWidth - data.margin.left - data.margin.right;
+      element.offsetWidth -
+      this.readyData.margin.left -
+      this.readyData.margin.right;
     const contentHeight =
-      element.offsetHeight - data.margin.top - data.margin.bottom;
-    const aspect = contentWidth / contentHeight;
+      element.offsetHeight -
+      this.readyData.margin.top -
+      this.readyData.margin.bottom;
+    //const aspect = contentWidth / contentHeight;
 
     console.log('c. w.', contentWidth);
     console.log('c. h.', contentHeight);
-    console.log('data', data);
+    //console.log('data', data);
 
     // ----------- TIP ------------
     const tip = getWeekTip(contentWidth, contentHeight);
@@ -99,8 +121,8 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
 
     var areaColors = d3
       .scaleOrdinal()
-      .domain(['uniqueClicks', 'totalClicks'])
-      .range([this.wc.styles.totalAreaFill, this.wc.styles.uniqueAreaFill]);
+      .domain(weeklyChart.areaDomainNames)
+      .range(weeklyChart.areaDomainFills);
 
     var x = d3.scaleTime().range([0, contentWidth]),
       y = d3.scaleLinear().range([contentHeight, 0]);
@@ -118,25 +140,28 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
 
     var g = svg
       .append('g')
-      .attr('transform', `translate(${data.margin.left}, ${data.margin.top})`);
+      .attr(
+        'transform',
+        `translate(${readyData.margin.left}, ${readyData.margin.top})`
+      );
 
     x.domain(
-      d3.extent(data.dataTotalClicks[0].value, function (d) {
+      d3.extent(readyData.dataTotalClicks[0].value, function (d) {
         return d.date;
       })
     );
 
     y.domain([
       0,
-      d3.max(data.dataTotalClicks, function (c) {
+      d3.max(this.readyData.dataTotalClicks, function (c) {
         return d3.max(c.value, function (d) {
-          return data.formateNumberK(d.clicks);
+          return readyData.formateNumberK(d.clicks);
         });
       }),
     ]);
 
     areaColors.domain(
-      data.dataTotalClicks.map(function (c) {
+      readyData.dataTotalClicks.map(function (c) {
         return c.key;
       })
     );
@@ -144,7 +169,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
     g.append('g')
       .attr('transform', `translate(${0}, ${contentHeight})`)
       .attr('class', 'axisWhite')
-      .call(d3.axisBottom(x).tickFormat(data.formateWeeks))
+      .call(d3.axisBottom(x).tickFormat(readyData.formateWeeks))
       .append('text')
       .attr('x', contentWidth)
       .attr('dy', '2.7em')
@@ -152,7 +177,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       //.attr('class', 'axis-x-text')
       .style('fill', 'black')
       //.style('font-size', '1.3em')
-      .text('Недели');
+      .text(weeklyChart.xAxisLabel);
 
     g.append('g')
       .attr('class', 'axisWhite')
@@ -166,15 +191,15 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       .style('fill', 'black')
       //.style('font-size', '1.3em')
       .attr('fill', 'black')
-      .text('Клики');
+      .text(weeklyChart.yAxisLabel);
 
     var areaSource = g
       .selectAll('.areas')
-      .data(data.dataAllClicks)
+      .data(readyData.dataAllClicks)
       .enter()
       .append('g')
-      .attr('id', function (d) {
-        return `area-${d.key}-week`;
+      .attr('class', function (d) {
+        return weeklyChart.getAreaClassN(d);
       });
 
     areaSource
@@ -187,10 +212,10 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       });
 
     //LINE
-    const lineColors = d3
+    const lineStrokes = d3
       .scaleOrdinal()
-      .domain(['uniqueLine', 'totalLine'])
-      .range([this.wc.styles.totalLineStroke, this.wc.styles.uniqueLineStroke]);
+      .domain(weeklyChart.lineDomainNames)
+      .range(weeklyChart.lineDomainStrokes);
 
     var line = d3
       .line()
@@ -204,14 +229,11 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
 
     var lineSource = g
       .selectAll('.lines')
-      .data(data.dataAllClicks)
+      .data(readyData.dataAllClicks)
       .enter()
       .append('g')
-      .attr('id', function (d) {
-        return `line-${d.key}-week`;
-      })
       .attr('class', function (d) {
-        return `line-${d.key}-week`;
+        return weeklyChart.getLineClassN(d);
       });
 
     lineSource
@@ -220,53 +242,32 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
         return line(d.value);
       })
       .attr('fill', 'none')
-      .attr('stroke-width', this.wc.styles.linesStrokWidth)
-      .attr('stroke', (d) => lineColors(d.key));
+      .attr('stroke-width', weeklyChart.charts[0].line.strokeWidth)
+      .attr('stroke', (d) => lineStrokes(d.key));
 
-    // TOTAL-CLICKS CIRCLES
-    var totalClicksCircles = g
-      .selectAll('total')
-      .data(data.dataAllClicks[0].value)
-      .enter()
-      .append('g')
-      .attr('class', this.wc.htmlAttrs.circlesTotalClass);
+    drawCircles(readyData, weeklyChart.charts);
 
-    totalClicksCircles
-      .append('circle')
-      .attr('cx', function (d) {
-        return x(d.date);
-      })
-      .attr('cy', function (d) {
-        return y(d.clicks);
-      })
-      .attr('r', this.wc.totalCircleR)
-      .attr('fill', this.wc.styles.totalCircleFill)
-      .attr('stroke', this.wc.styles.totalCircleStroke)
-      .attr('stroke-width', this.wc.styles.totalCircleStrokeWidth)
-      .on('mouseover', tip.show)
-      .on('mouseout', tip.hide);
-
-    // UNIQUE-CLICKS CIRCLES
-    var uniqueClicksCircles = g
-      .selectAll('unique')
-      .data(data.dataAllClicks[1].value)
-      .enter()
-      .append('g')
-      .attr('class', this.wc.uniqueCirclesClassN);
-
-    uniqueClicksCircles
-      .append('circle')
-      .attr('cx', function (d) {
-        return x(d.date);
-      })
-      .attr('cy', function (d) {
-        return y(d.clicks);
-      })
-      .attr('r', this.wc.uniqueCircleR)
-      .attr('fill', this.wc.styles.uniqueCircleFill)
-      .attr('stroke', this.wc.styles.uniqueCircleStroke)
-      .attr('stroke-width', this.wc.styles.uniqueCircleStrokeWidth)
-      .on('mouseover', tip.show)
-      .on('mouseout', tip.hide);
+    function drawCircles(readyData, charts) {
+      for (let i = 0; i < charts.length; i++) {
+        g.selectAll(charts[i].type)
+          .data(readyData.dataAllClicks[i].value)
+          .enter()
+          .append('g')
+          .attr('class', charts[i].circle.classN)
+          .append('circle')
+          .attr('cx', function (d) {
+            return x(d.date);
+          })
+          .attr('cy', function (d) {
+            return y(d.clicks);
+          })
+          .attr('r', charts[i].circle.radius)
+          .attr('fill', charts[i].circle.fill)
+          .attr('stroke', charts[i].circle.stroke)
+          .attr('stroke-width', charts[i].circle.strokeWidth)
+          .on('mouseover', tip.show)
+          .on('mouseout', tip.hide);
+      }
+    }
   }
 }

@@ -6,11 +6,11 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+// import { getWeekTip } from './../../../assets/util/weekly-chart-tip';
 
 import { BasicGraphsHttpService } from '../basic-graphs-http.service';
 
 import * as d3 from 'd3';
-import { getWeekTip } from '../../../assets/util/weekly_clicks_tip';
 
 import { getDataReady } from '../../../assets/scripts/basic-graphs';
 
@@ -56,8 +56,8 @@ export class MonthlyClicksComponent implements OnChanges {
     console.log('data', data);
 
     // ----------- TIP ------------
-    const tip = getWeekTip(contentWidth, contentHeight);
-    svg.call(tip);
+    //const tip = getWeekTip(contentWidth, contentHeight);
+    // svg.call(tip);
 
     var color = d3
       .scaleOrdinal()
@@ -198,9 +198,9 @@ export class MonthlyClicksComponent implements OnChanges {
       })
       .attr('r', 4)
       .attr('fill', 'red')
-      .attr('stroke', 'none')
-      .on('mouseover', tip.show)
-      .on('mouseout', tip.hide);
+      .attr('stroke', 'none');
+    //.on('mouseover', tip.show)
+    //.on('mouseout', tip.hide);
 
     // UNIQUE-CLICKS CIRCLES
     var uniqueClicksCircles = g
@@ -220,8 +220,8 @@ export class MonthlyClicksComponent implements OnChanges {
       })
       .attr('r', 4)
       .attr('fill', 'blue')
-      .attr('stroke', 'none')
-      .on('mouseover', tip.show)
-      .on('mouseout', tip.hide);
+      .attr('stroke', 'none');
+    //.on('mouseover', tip.show)
+    //.on('mouseout', tip.hide);
   }
 }

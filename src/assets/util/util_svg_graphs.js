@@ -1,14 +1,14 @@
 import * as d3 from "d3";
 // ----------- RUN_SPINNER -----------
-function runSpinner(chartContainer, svgHeight) {
+function runSpinner(chartContainer, spinnerSvgHeight, spinnerSvgId) {
   const element = chartContainer.nativeElement;
   const width = element.offsetWidth;
-  const height = svgHeight;
+  const height = spinnerSvgHeight;
 
   const svg = d3
     .select(element)
     .append("svg")
-    .attr("id", "weekChartSpinner")
+    .attr("id", spinnerSvgId)
     .attr("width", width)
     .attr("height", height);
 

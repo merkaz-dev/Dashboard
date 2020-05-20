@@ -18,11 +18,11 @@ export class BasicGraphsComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private basicGraphs: BasicGraphsHttpService) {}
 
   ngOnInit() {
-    this.subscription = this.basicGraphs.getWeeklyClicks().subscribe((d) => {
-      this.data = d;
-      this.basicGraphs.processDataInfo(this.data.info);
-      console.log('data from MongoDb', this.data);
-    });
+    // this.subscription = this.basicGraphs.getWeeklyClicks().subscribe((d) => {
+    //   this.data = d;
+    //   this.basicGraphs.processDataInfo(this.data.info);
+    //   console.log('data from MongoDb', this.data);
+    // });
   }
   ngAfterViewInit() {}
 

@@ -1,0 +1,46 @@
+{
+  "unique": {
+    "area": {
+      "fill": "",
+      "classN": ""
+    },
+    "line": {
+      "stroke": "",
+      "stroke-width": "",
+      "classN": ""
+    },
+    "circle": {
+      "fill": "",
+      "stroke": "",
+      "stroke-width": "",
+      "classN": "",
+      "radius": ""
+    },
+    "legend": {
+      "htmlLineId": "",
+      "htmlRectId": ""
+    }
+  },
+  "total": {
+    "area": {
+      "fill": "",
+      "classN": ""
+    },
+    "line": {
+      "stroke": "",
+      "stroke-width": "",
+      "classN": ""
+    },
+    "circle": {
+      "fill": "",
+      "stroke": "",
+      "stroke-width": "",
+      "classN": "",
+      "radius": ""
+    },
+    "legend": {
+      "htmlLineId": "",
+      "htmlRectId": ""
+    }
+  }
+}

@@ -2,33 +2,42 @@
   <table class="table table-borderless table-sm">
     <thead>
       <tr>
-        <td valign="middle" align="center">Общие</td>
+        <!-- <tr *ngFor="let legend of chartLegends">
+        {{
+          legend.title
+        }} -->
+        <!-- <td valign="middle" align="center">{{ legend.title }}</td>
         <td valign="middle" align="center">
           <mat-checkbox
+            id="{{ legend.htmlChbxLineId }}"
             class="example-margin"
             [disabled]="disabled"
             [checked]="totalLinechecked"
-            (change)="totalLineChange((totalLinechecked = !totalLinechecked))"
+            (change)="totalLineChange($event)"
           >
           </mat-checkbox>
         </td>
 
         <td valign="middle" align="center">
-          <div [id]="totalLineHtmlId"></div>
+          <div id="{{ legend.htmlLineId }}"></div>
         </td>
         <td valign="middle" align="center">
           <mat-checkbox
+            id="{{ legend.htmlChbxAreaId }}"
             class="example-margin"
             [disabled]="disabled"
             [checked]="checked"
+            (change)="totalLineChange($event)"
           >
           </mat-checkbox>
         </td>
 
-        <td valign="middle" align="center"><div class="rect"></div></td>
-      </tr>
+        <td valign="middle" align="center">
+          <div id="{{ legend.htmlAreaId }}"></div>
+        </td>
+      </tr> -->
 
-      <tr>
+        <!-- <tr>
         <td valign="middle" align="center">
           Уникальные
         </td>
@@ -53,7 +62,10 @@
           </mat-checkbox>
         </td>
 
-        <td valign="middle" align="center"><div class="rect"></div></td>
+        <td valign="middle" align="center">
+          <div [id]="uniqueRectHtmlId"></div>
+        </td>
+      </tr> -->
       </tr>
     </thead>
   </table>

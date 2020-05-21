@@ -1,19 +1,15 @@
+<div id="weeklyLegend"></div>
 <div class="row no-gutters d-flex justify-content-center">
   <table class="table table-borderless table-sm">
     <thead>
-      <tr>
-        <!-- <tr *ngFor="let legend of chartLegends">
-        {{
-          legend.title
-        }} -->
-        <!-- <td valign="middle" align="center">{{ legend.title }}</td>
+      <tr *ngFor="let legend of chartLegends">
+        <td valign="middle" align="center">{{ legend.title }}</td>
         <td valign="middle" align="center">
           <mat-checkbox
             id="{{ legend.htmlChbxLineId }}"
             class="example-margin"
-            [disabled]="disabled"
-            [checked]="totalLinechecked"
-            (change)="totalLineChange($event)"
+            [checked]="checked"
+            (change)="chbxChange($event)"
           >
           </mat-checkbox>
         </td>
@@ -25,9 +21,8 @@
           <mat-checkbox
             id="{{ legend.htmlChbxAreaId }}"
             class="example-margin"
-            [disabled]="disabled"
             [checked]="checked"
-            (change)="totalLineChange($event)"
+            (change)="chbxChange($event)"
           >
           </mat-checkbox>
         </td>
@@ -35,37 +30,6 @@
         <td valign="middle" align="center">
           <div id="{{ legend.htmlAreaId }}"></div>
         </td>
-      </tr> -->
-
-        <!-- <tr>
-        <td valign="middle" align="center">
-          Уникальные
-        </td>
-        <td valign="middle" align="center">
-          <mat-checkbox
-            class="example-margin"
-            [disabled]="disabled"
-            [checked]="checked"
-          >
-          </mat-checkbox>
-        </td>
-
-        <td valign="middle" align="center">
-          <div [id]="uniqueLineHtmlId"></div>
-        </td>
-        <td valign="middle" align="center">
-          <mat-checkbox
-            class="example-margin"
-            [disabled]="disabled"
-            [checked]="checked"
-          >
-          </mat-checkbox>
-        </td>
-
-        <td valign="middle" align="center">
-          <div [id]="uniqueRectHtmlId"></div>
-        </td>
-      </tr> -->
       </tr>
     </thead>
   </table>

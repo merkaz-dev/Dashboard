@@ -15,6 +15,7 @@ import {
   getTextForTitleTimeRange,
   setUpDatesFromMonToSun,
 } from './../../assets/util/momentDate.js';
+import { BasicTimeFrameChart } from 'src/models/basic-time-frame-charts/basic-time-frame-chart.model.js';
 @Injectable({
   providedIn: 'root',
 })
@@ -25,6 +26,7 @@ export class BasicGraphsHttpService {
   private readonly refreshToken$ = new BehaviorSubject(undefined);
 
   public isLoading = new BehaviorSubject(false);
+
   public dataInfoSubj = new BehaviorSubject({});
   public data$ = new BehaviorSubject(this.uri);
   private httpOptions = {

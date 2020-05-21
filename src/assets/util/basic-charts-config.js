@@ -2,7 +2,6 @@ import * as d3 from "d3";
 
 function getLineLegend(
   lineHtmlId,
-  classN,
   lineStoke,
   linesStrokWidth,
   circleR,
@@ -11,7 +10,8 @@ function getLineLegend(
   circleStrokeWidth
 ) {
   var svg = d3
-    .select(`#${lineHtmlId}`)
+    //.select("#weeklyChart-totalClicks-line-legend")
+    .selectAll(`#${lineHtmlId}`)
     .append("svg")
     .attr("height", 25)
     .attr("width", 60);
@@ -24,7 +24,6 @@ function getLineLegend(
     .attr("y1", 10)
     .attr("x2", 60)
     .attr("y2", 10)
-    .attr("class", classN)
     .style("stroke", lineStoke)
     .style("stroke-width", linesStrokWidth);
 
@@ -33,16 +32,19 @@ function getLineLegend(
     .attr("cx", 30)
     .attr("cy", 10)
     .attr("r", circleR)
-    .attr("class", classN)
     .style("fill", circleFill)
     .style("stroke", circleStroke)
     .style("stroke-width", circleStrokeWidth);
+
+  //console.log("SVG classN", classN);
+  console.log("SVG lineHtmlId", lineHtmlId);
+  console.log("SVG", svg);
   return svg;
 }
 
-function getRectLegend(rectHtmlId, rectFill) {
+function getAreaLegend(areaHtmlId, rectFill) {
   const svg = d3
-    .select(`#${rectHtmlId}`)
+    .selectAll(`#${areaHtmlId}`)
     .append("svg")
     .attr("height", 25)
     .attr("width", 25);
@@ -56,8 +58,9 @@ function getRectLegend(rectHtmlId, rectFill) {
     .attr("width", 17)
     .attr("height", 17)
     .style("fill", rectFill);
-
+  console.log("SVG areaHtmlId", areaHtmlId);
+  console.log("SVG", svg);
   return svg;
 }
 
-export { getLineLegend, getRectLegend };
+export { getLineLegend, getAreaLegend };

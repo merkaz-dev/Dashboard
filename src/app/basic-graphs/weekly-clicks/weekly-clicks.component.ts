@@ -1,11 +1,12 @@
 import {
   Component,
   ElementRef,
-  Input,
-  OnChanges,
   ViewChild,
   ViewEncapsulation,
-  OnDestroy,
+  OnInit,
+  AfterViewInit,
+  Input,
+  OnChanges,
 } from '@angular/core';
 
 import { BasicGraphsHttpService } from '../basic-graphs-http.service';
@@ -29,10 +30,9 @@ import { BasicTimeFrameChart } from 'src/models/basic-time-frame-charts/basic-ti
   encapsulation: ViewEncapsulation.None,
 })
 export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
-  implements OnChanges, OnDestroy {
+  implements OnInit, OnChanges {
   @ViewChild('weekChart') chartContainer: ElementRef;
-  @Input('data') data: any;
-
+  @Input() weeklyData: any;
   dataInfo: any;
   keys: string[];
   readyData: any;
@@ -46,22 +46,19 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
     super();
   }
   ngOnInit() {
-    console.log('DATA', this.data);
     this.subs.add(
-      this.basicGraphs.getWeeklyClicks().subscribe((d) => {
-        this.data = d;
-        console.log('DATA from S', this.data);
-        this.readyData = getDataReady(this.data.data);
-        this.dataInfo = this.data.info;
-        this.basicGraphs.processDataInfo(this.data.info);
-        this.weeklyChart = getWeeklyChart(['totalClicks', 'uniqueClicks']);
-
-        this.createChart(this.readyData, this.weeklyChart);
-      }),
-      this.basicGraphs.dataInfoSubj.subscribe((d) => {
-        this.dataInfo = d;
-        console.log('D I', this.dataInfo);
-      }),
+      // this.basicGraphs.getWeeklyClicks().subscribe((d) => {
+      //   this.data = d;
+      //   console.log('DATA from Server', this.data);
+      //   this.readyData = getDataReady(this.data.data);
+      //   this.dataInfo = this.data.info;
+      //   this.basicGraphs.processDataInfo(this.data.info);
+      //   this.weeklyChart = getWeeklyChart(['totalClicks', 'uniqueClicks']);
+      // this.createChart(this.readyData, this.weeklyChart);
+      // }),
+      //   this.basicGraphs.dataInfoSubj.subscribe((d) => {
+      //     this.dataInfo = d;
+      //   }),
       this.loaderService.loaderState.subscribe((state: LoaderState) => {
         this.isLoading = state.show;
         console.log('IS LOADING', this.isLoading);
@@ -77,31 +74,34 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
     );
   }
 
-  ngOnChanges(): void {
-    if (!this.readyData) {
+  ngOnChanges() {
+    if (!this.weeklyData) {
       return;
     }
-    // create chart
-    //this.createChart();
+    this.readyData = getDataReady(this.weeklyData.data);
+    console.log('Ready Data', this.readyData);
+    this.weeklyChart = getWeeklyChart(['totalClicks', 'uniqueClicks']);
+
+    console.log('Weekly Chart', this.weeklyChart);
+    this.createChart(this.readyData, this.weeklyChart);
   }
 
-  //----------- CREATE CHART -------------
+  //---------------------------------------//
+  //            CREATE CHART               //
+  //---------------------------------------//
   private createChart(myReadyData, myWeeklyChart): void {
     const element = this.chartContainer.nativeElement;
 
-    // ----------- GET DATA -------------
-    const readyData = myReadyData;
-    const weeklyChart = myWeeklyChart;
-
-    d3.select(`#${weeklyChart.spinnerId}`).remove();
+    // ----------- REMOVE SPINNER ----------------
+    d3.select(`#${myWeeklyChart.spinnerId}`).remove();
 
     // ---------- SVG -----------
     const svg = d3
       .select(element)
       .append('svg')
-      .attr('id', `${weeklyChart.svgId}`)
+      .attr('id', `${myWeeklyChart.svgId}`)
       .attr('width', element.offsetWidth)
-      .attr('height', weeklyChart.height)
+      .attr('height', myWeeklyChart.height)
       .call(responsivefy);
 
     const contentWidth =
@@ -112,11 +112,9 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       element.offsetHeight -
       this.readyData.margin.top -
       this.readyData.margin.bottom;
-    //const aspect = contentWidth / contentHeight;
 
     console.log('c. w.', contentWidth);
     console.log('c. h.', contentHeight);
-    //console.log('data', data);
 
     // ----------- TIP ------------
     const tip = getWeekTip(contentWidth, contentHeight);
@@ -124,8 +122,8 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
 
     var areaColors = d3
       .scaleOrdinal()
-      .domain(weeklyChart.areaDomainNames)
-      .range(weeklyChart.areaDomainFills);
+      .domain(myWeeklyChart.areaDomainNames)
+      .range(myWeeklyChart.areaDomainFills);
 
     var x = d3.scaleTime().range([0, contentWidth]),
       y = d3.scaleLinear().range([contentHeight, 0]);
@@ -145,26 +143,26 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       .append('g')
       .attr(
         'transform',
-        `translate(${readyData.margin.left}, ${readyData.margin.top})`
+        `translate(${myReadyData.margin.left}, ${myReadyData.margin.top})`
       );
 
     x.domain(
-      d3.extent(readyData.dataTotalClicks[0].value, function (d) {
+      d3.extent(myReadyData.dataTotalClicks[0].value, function (d) {
         return d.date;
       })
     );
 
     y.domain([
       0,
-      d3.max(this.readyData.dataTotalClicks, function (c) {
+      d3.max(myReadyData.dataTotalClicks, function (c) {
         return d3.max(c.value, function (d) {
-          return readyData.formateNumberK(d.clicks);
+          return myReadyData.formateNumberK(d.clicks);
         });
       }),
     ]);
 
     areaColors.domain(
-      readyData.dataTotalClicks.map(function (c) {
+      myReadyData.dataTotalClicks.map(function (c) {
         return c.key;
       })
     );
@@ -172,7 +170,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
     g.append('g')
       .attr('transform', `translate(${0}, ${contentHeight})`)
       .attr('class', 'axisWhite')
-      .call(d3.axisBottom(x).tickFormat(readyData.formateWeeks))
+      .call(d3.axisBottom(x).tickFormat(myReadyData.formateWeeks))
       .append('text')
       .attr('x', contentWidth)
       .attr('dy', '2.7em')
@@ -180,7 +178,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       //.attr('class', 'axis-x-text')
       .style('fill', 'black')
       //.style('font-size', '1.3em')
-      .text(weeklyChart.xAxisLabel);
+      .text(myWeeklyChart.xAxisLabel);
 
     g.append('g')
       .attr('class', 'axisWhite')
@@ -194,15 +192,15 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
       .style('fill', 'black')
       //.style('font-size', '1.3em')
       .attr('fill', 'black')
-      .text(weeklyChart.yAxisLabel);
+      .text(myWeeklyChart.yAxisLabel);
 
     var areaSource = g
       .selectAll('.areas')
-      .data(readyData.dataAllClicks)
+      .data(myReadyData.dataAllClicks)
       .enter()
       .append('g')
       .attr('class', function (d) {
-        return weeklyChart.getAreaClassN(d);
+        return myWeeklyChart.getAreaClassN(d);
       });
 
     areaSource
@@ -217,8 +215,8 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
     //LINE
     const lineStrokes = d3
       .scaleOrdinal()
-      .domain(weeklyChart.lineDomainNames)
-      .range(weeklyChart.lineDomainStrokes);
+      .domain(myWeeklyChart.lineDomainNames)
+      .range(myWeeklyChart.lineDomainStrokes);
 
     var line = d3
       .line()
@@ -232,11 +230,11 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
 
     var lineSource = g
       .selectAll('.lines')
-      .data(readyData.dataAllClicks)
+      .data(myReadyData.dataAllClicks)
       .enter()
       .append('g')
       .attr('class', function (d) {
-        return weeklyChart.getLineClassN(d);
+        return myWeeklyChart.getLineClassN(d);
       });
 
     lineSource
@@ -245,15 +243,15 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
         return line(d.value);
       })
       .attr('fill', 'none')
-      .attr('stroke-width', weeklyChart.charts[0].line.strokeWidth)
+      .attr('stroke-width', myWeeklyChart.charts[0].line.strokeWidth)
       .attr('stroke', (d) => lineStrokes(d.key));
 
-    drawCircles(readyData, weeklyChart.charts);
+    drawCircles(myReadyData, myWeeklyChart.charts);
 
-    function drawCircles(readyData, charts) {
+    function drawCircles(myReadyDat, charts) {
       for (let i = 0; i < charts.length; i++) {
         g.selectAll(charts[i].type)
-          .data(readyData.dataAllClicks[i].value)
+          .data(myReadyDat.dataAllClicks[i].value)
           .enter()
           .append('g')
           .attr('class', charts[i].circle.classN)

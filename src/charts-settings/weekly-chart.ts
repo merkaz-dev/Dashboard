@@ -15,7 +15,9 @@ function getWeeklyChart(keys) {
       chart.circle.stroke = 'yellow';
       chart.circle.radius = 5;
       chart.circle.strokeWidth = 3;
-      // chart.legend = new Legend('weeklyChart', keys[i]);
+      chart.legend.title = 'Уникальные';
+      //chart.legend.htmlLineId = 'htmlLineId-2';
+      //chart.legend.htmlAreaId = 'htmlAreaId-2';
       charts.push(chart);
     }
 
@@ -30,7 +32,9 @@ function getWeeklyChart(keys) {
       chart.circle.stroke = 'green';
       chart.circle.radius = 5;
       chart.circle.strokeWidth = 3;
-      //chart.legend = new Legend('weeklyChart', keys[i]);
+      chart.legend.title = 'Общие';
+      //chart.legend.htmlLineId = 'htmlLineId-1';
+      //chart.legend.htmlAreaId = 'htmlAreaId-1';
       charts.push(chart);
     }
   }
@@ -52,6 +56,7 @@ function getWeeklyChart(keys) {
     charts // charts
   );
 
+  console.log('Weekly Chart fomr w-c.ts', weeklyChart);
   return weeklyChart;
 }
 

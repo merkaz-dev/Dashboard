@@ -20,15 +20,15 @@ import { BasicChart } from 'src/models/basic-time-frame-charts/basic-chart.model
 export class LegendComponent implements OnChanges {
   checked = true;
 
-  @Input() weeklyChart: BasicTimeFrameChart;
+  @Input() chart: BasicTimeFrameChart;
   charts: BasicChart[];
   constructor() {}
 
   ngOnChanges() {
-    if (!this.weeklyChart) {
+    if (!this.chart) {
       return;
     }
-    this.charts = this.weeklyChart.charts;
+    this.charts = this.chart.charts;
   }
   //---------------------------------------//
   //              HANDLE CHECKBOXES        //

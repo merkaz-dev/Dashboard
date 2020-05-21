@@ -1,6 +1,5 @@
 import { Legend } from './legend.model';
 import { BasicChart } from './basic-chart.model';
-import { CurrencyPipe } from '@angular/common';
 
 export class BasicTimeFrameChart {
   key: string;

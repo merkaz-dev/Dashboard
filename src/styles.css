@@ -51,3 +51,16 @@ button.active:focus {
 a {
   text-decoration: none;
 }
+
+.mat-expansion-panel-header-title,
+.mat-expansion-panel-header-description {
+  display: inline-block !important;
+  flex-grow: 1;
+  margin-right: 16px;
+}
+
+.mat-expansion-panel-header {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px !important;
+  font-weight: 500;
+}

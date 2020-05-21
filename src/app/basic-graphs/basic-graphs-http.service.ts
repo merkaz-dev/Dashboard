@@ -22,12 +22,10 @@ import { BasicTimeFrameChart } from 'src/models/basic-time-frame-charts/basic-ti
 export class BasicGraphsHttpService {
   private uri =
     'https://webhooks.mongodb-stitch.com/api/client/v2.0/app/wikistorestitchapp-vgkfz/service/wikiStoreStats/incoming_webhook/s_ch_9_weekly_clicks_for_time_period?startDate=2020-01-01&endDate=2020-03-01&secret=wikistore';
-  private response: Observable<any>;
-  private readonly refreshToken$ = new BehaviorSubject(undefined);
 
   public isLoading = new BehaviorSubject(false);
 
-  public dataInfoSubj = new BehaviorSubject({});
+  public dataInfoSubj = new BehaviorSubject(null);
   public data$ = new BehaviorSubject(this.uri);
   private httpOptions = {
     headers: new HttpHeaders({
@@ -36,7 +34,7 @@ export class BasicGraphsHttpService {
   };
   constructor(private http: HttpClient) {}
 
-  getWeeklyClicks(): Observable<any> {
+  getWeeklyChartData(): Observable<any> {
     return this.data$.pipe(
       switchMap((uri) => {
         return this.http.get(uri).pipe(retry(2));

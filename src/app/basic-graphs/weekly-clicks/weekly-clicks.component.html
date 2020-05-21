@@ -1,4 +1,8 @@
-<app-accordion></app-accordion>
+<div class="text-center mt-3 mb-3">
+  <h5>{{ title }}</h5>
+</div>
+
+<app-accordion [dataInfo]="dataInfo"></app-accordion>
+
 <div #weekChart id="weekChart"></div>
-<app-legend [weeklyChart]="weeklyChart"></app-legend>
-<!-- <app-legend></app-legend> -->
+<app-legend [chart]="weeklyChart"></app-legend>

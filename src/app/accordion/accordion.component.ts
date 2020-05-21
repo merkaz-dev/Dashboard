@@ -10,19 +10,21 @@ import { Subscription } from 'rxjs';
 })
 export class AccordionComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
-  dataInfo: any;
-  subscription: Subscription;
+  show = false;
+
   @Input() multi = true;
+  @Input() dataInfo: any;
   @ViewChild('accordion', { static: true }) accordion: any;
   constructor(private basicGraphs: BasicGraphsHttpService) {
     super();
   }
   ngOnInit(): void {
-    this.subs.add(
-      this.basicGraphs.dataInfoSubj.subscribe((d) => {
-        this.dataInfo = d;
-      })
-    );
+    this.subs
+      .add
+      // this.basicGraphs.dataInfoSubj.subscribe((d) => {
+      //   this.dataInfo = d;
+      // })
+      ();
   }
   closeAll() {
     this.accordion.closeAll();

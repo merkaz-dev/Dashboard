@@ -37,6 +37,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
   keys: string[];
   readyData: any;
   isLoading = false;
+  title = '';
   weeklyChart: BasicTimeFrameChart;
 
   constructor(
@@ -47,6 +48,9 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
   }
   ngOnInit() {
     this.subs.add(
+      this.basicGraphs.dataInfoSubj.subscribe((d) => {
+        this.dataInfo = d;
+      }),
       this.loaderService.loaderState.subscribe((state: LoaderState) => {
         this.isLoading = state.show;
         console.log('IS LOADING', this.isLoading);
@@ -72,6 +76,7 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
 
     console.log('Weekly Chart', this.weeklyChart);
     this.createChart(this.readyData, this.weeklyChart);
+    this.title = this.weeklyChart.title;
   }
 
   //---------------------------------------//

@@ -47,7 +47,7 @@ function getWeeklyChart(keys) {
     // yAxisLabel: string,
     // xAxisLabel: string,
     // charts: BasicChart[]
-    'Еженедельные посещени', // Chart Title
+    'Посещения по Неделям', // Chart Title
     'weeklyChart', // Chart SVG Id
     'weeklyChartSpinner', // spinnerId
     450, // chart height

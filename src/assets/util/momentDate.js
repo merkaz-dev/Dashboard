@@ -31,9 +31,12 @@ function setUpDatesFromMonToSun(from, to) {
 
 //GET TEXT FOR TITLE TIME RANGE
 function getTextForTitleTimeRange(fromDate, toDate, locale) {
-  const from = getDateDetailsByLocale(fromDate, "ru");
-  const to = getDateDetailsByLocale(toDate, "ru");
+  const from = getDateDetailsByLocale(fromDate, locale);
+  const to = getDateDetailsByLocale(toDate, locale);
 
-  return `с ${from.date} (${from.weekDay}) по ${to.date} (${to.weekDay})`;
+  return {
+    from: `с ${from.date} (${from.weekDay})`,
+    to: `по ${to.date} (${to.weekDay})`,
+  };
 }
 export { getTextForTitleTimeRange, setUpDatesFromMonToSun };

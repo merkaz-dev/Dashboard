@@ -20,22 +20,20 @@ const _moment = _rollupMoment || moment;
 export class RangeDatepickerComponent implements OnInit, AfterViewInit {
   toDate: FormControl;
   fromDate: FormControl;
-  dataInfo: any;
+  @Input() dataInfo: any;
   constructor(
     private _adapter: DateAdapter<any>,
     private basicGraphs: BasicGraphsHttpService
   ) {}
 
   ngOnInit(): void {
-    this.basicGraphs.dataInfoSubj.subscribe((d) => {
-      this.dataInfo = d;
+    // this.basicGraphs.dataInfoSubj.subscribe((d) => {
+    //   this.dataInfo = d;
 
-      //SETUP DATES
-      this.toDate = new FormControl(moment(new Date(this.dataInfo.endDate)));
-      this.fromDate = new FormControl(
-        moment(new Date(this.dataInfo.startDate))
-      );
-    });
+    //SETUP DATES
+    this.toDate = new FormControl(moment(new Date(this.dataInfo.endDate)));
+    this.fromDate = new FormControl(moment(new Date(this.dataInfo.startDate)));
+    //});
     this._adapter.setLocale('ru');
   }
   ngAfterViewInit() {}

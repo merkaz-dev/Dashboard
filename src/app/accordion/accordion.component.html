@@ -1,18 +1,19 @@
-<mat-accordion
-  collapsedHeight="*"
-  expandedHeight="*"
-  [multi]="multi"
-  #accordion="matAccordion"
->
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title style="text-align: center;">
-        <div>
-          {{ dataInfo.title }}
-          {{ dataInfo.titleTimeRange }}
-        </div>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-range-datepicker></app-range-datepicker>
-  </mat-expansion-panel>
-</mat-accordion>
+<div *ngIf="dataInfo">
+  <mat-accordion
+    collapsedHeight="*"
+    expandedHeight="*"
+    [multi]="multi"
+    #accordion="matAccordion"
+  >
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="text-center" style="width: 100%;">
+          {{ dataInfo.titleTimeRange.from }} {{ dataInfo.titleTimeRange.to }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div *ngIf="dataInfo">
+        <app-range-datepicker [dataInfo]="dataInfo"></app-range-datepicker>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

@@ -23,7 +23,7 @@ export class BasicGraphsComponent extends UnsubscribeOnDestroyAdapter
 
   ngOnInit() {
     this.subs.add(
-      this.basicGraphs.getWeeklyClicks().subscribe((d) => {
+      this.basicGraphs.getWeeklyChartData().subscribe((d) => {
         this.data = d;
         this.basicGraphs.processDataInfo(this.data.info);
         console.log('data from MongoDb', this.data);

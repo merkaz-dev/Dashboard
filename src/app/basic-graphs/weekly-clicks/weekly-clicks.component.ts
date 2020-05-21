@@ -47,18 +47,6 @@ export class WeeklyClicksComponent extends UnsubscribeOnDestroyAdapter
   }
   ngOnInit() {
     this.subs.add(
-      // this.basicGraphs.getWeeklyClicks().subscribe((d) => {
-      //   this.data = d;
-      //   console.log('DATA from Server', this.data);
-      //   this.readyData = getDataReady(this.data.data);
-      //   this.dataInfo = this.data.info;
-      //   this.basicGraphs.processDataInfo(this.data.info);
-      //   this.weeklyChart = getWeeklyChart(['totalClicks', 'uniqueClicks']);
-      // this.createChart(this.readyData, this.weeklyChart);
-      // }),
-      //   this.basicGraphs.dataInfoSubj.subscribe((d) => {
-      //     this.dataInfo = d;
-      //   }),
       this.loaderService.loaderState.subscribe((state: LoaderState) => {
         this.isLoading = state.show;
         console.log('IS LOADING', this.isLoading);

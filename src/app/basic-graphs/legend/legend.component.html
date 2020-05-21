@@ -2,11 +2,11 @@
 <div class="row no-gutters d-flex justify-content-center">
   <table class="table table-borderless table-sm">
     <thead>
-      <tr *ngFor="let legend of chartLegends">
-        <td valign="middle" align="center">{{ legend.title }}</td>
+      <tr *ngFor="let chart of charts">
+        <td valign="middle" align="center">{{ chart.legend.title }}</td>
         <td valign="middle" align="center">
           <mat-checkbox
-            id="{{ legend.htmlChbxLineId }}"
+            id="{{ chart.legend.htmlChbxLineId }}"
             class="example-margin"
             [checked]="checked"
             (change)="chbxChange($event)"
@@ -15,11 +15,31 @@
         </td>
 
         <td valign="middle" align="center">
-          <div id="{{ legend.htmlLineId }}"></div>
+          <div class="{{ chart.line.classN }}">
+            <svg height="25" width="60">
+              <g transform="translate(0,0)">
+                <line
+                  x1="0"
+                  y1="10"
+                  x2="60"
+                  y2="10"
+                  [style.stroke]="chart.line.stroke"
+                  [style.stroke-width]="chart.line.strokeWidth"
+                ></line>
+                <circle
+                  cx="30"
+                  cy="10"
+                  [attr.r]="chart.circle.radius"
+                  [style.stroke]="chart.circle.stroke"
+                  [style.stroke-width]="chart.circle.strokeWidth"
+                ></circle>
+              </g>
+            </svg>
+          </div>
         </td>
         <td valign="middle" align="center">
           <mat-checkbox
-            id="{{ legend.htmlChbxAreaId }}"
+            id="{{ chart.legend.htmlChbxAreaId }}"
             class="example-margin"
             [checked]="checked"
             (change)="chbxChange($event)"
@@ -28,7 +48,19 @@
         </td>
 
         <td valign="middle" align="center">
-          <div id="{{ legend.htmlAreaId }}"></div>
+          <div>
+            <svg height="25" width="25">
+              <g transform="translate(0,0)">
+                <rect
+                  x="0"
+                  y="0"
+                  width="17"
+                  height="17"
+                  [style.fill]="chart.area.fill"
+                ></rect>
+              </g>
+            </svg>
+          </div>
         </td>
       </tr>
     </thead>

@@ -1,25 +1,15 @@
-import {
-  Component,
-  Input,
-  AfterViewInit,
-  OnInit,
-  OnChanges,
-  AfterContentInit,
-  AfterContentChecked,
-  AfterViewChecked,
-} from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { getWeeklyChart } from 'src/charts-settings/weekly-chart';
 import {
-  getLineLegend,
-  getAreaLegend,
+  getLineLegend, //NOT NEEDED???
+  getAreaLegend, //NOT NEEDED???
 } from '../../../assets/util/basic-charts-config';
 
 import { ViewEncapsulation } from '@angular/core';
-//import { WeeklyChart } from 'src/charts-settings/weekly-chart';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { BasicTimeFrameChart } from 'src/models/basic-time-frame-charts/basic-time-frame-chart.model';
-import { Legend } from 'src/models/basic-time-frame-charts/legend.model';
-import { element } from 'protractor';
+
+import { BasicChart } from 'src/models/basic-time-frame-charts/basic-chart.model';
 
 @Component({
   selector: 'app-legend',
@@ -27,52 +17,29 @@ import { element } from 'protractor';
   styleUrls: ['./legend.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class LegendComponent implements AfterViewInit {
+export class LegendComponent implements OnChanges {
   checked = true;
-  isLoading = false;
-  chart: BasicTimeFrameChart = getWeeklyChart(['totalClicks', 'uniqueClicks']);
-  chartLegends: Legend[] = this.chart.legends;
 
+  @Input() weeklyChart: BasicTimeFrameChart;
+  charts: BasicChart[];
   constructor() {}
 
-  ngAfterViewInit() {
-    console.log('ngAfterViewInit legend data', this.chart);
-    this.createLegend(this.chart);
-  }
-
-  //---------------------------------------//
-  //               CREATE LEGEND           //
-  //---------------------------------------//
-  private createLegend(chart: BasicTimeFrameChart) {
-    //this.chartLegends = this.chart.legends;
-    // CREATE LINES
-    for (let i = 0; i < chart.charts.length; i++) {
-      getLineLegend(
-        chart.legends[i].htmlLineId,
-        chart.charts[i].line.stroke,
-        chart.charts[i].line.strokeWidth,
-        chart.charts[i].circle.radius,
-        chart.charts[i].circle.fill,
-        chart.charts[i].circle.stroke,
-        chart.charts[i].circle.strokeWidth
-      );
+  ngOnChanges() {
+    if (!this.weeklyChart) {
+      return;
     }
-    // CREATE AREAS
-    for (let i = 0; i < chart.charts.length; i++) {
-      getAreaLegend(chart.legends[i].htmlAreaId, chart.charts[i].area.fill);
-    }
+    this.charts = this.weeklyChart.charts;
   }
-
-  // HANDLE CHECKBOXES
+  //---------------------------------------//
+  //              HANDLE CHECKBOXES        //
+  //---------------------------------------//
   chbxChange(event: MatCheckboxChange) {
     let className = event.source.id.split('_')[0];
     console.log('CHECKED ID', className);
     let opacity = event.checked === true ? '1' : '0';
     var elements = document.getElementsByClassName(className);
-
     console.log('Elements from chbxChange', elements);
-    for (let i = 0; elements.length; i++) {
-      console.log(`element-${i}: ${elements[i]}`);
+    for (let i = 0; i < elements.length; i++) {
       elements[i].setAttribute('opacity', opacity);
     }
   }
